@@ -43,7 +43,7 @@
                 }
 
                 public function MostrarPersona (){
-                    echo $this->nombre.'- DNI: '.$this->dni.'<br>'; 
+                    echo $this->nombre.' - DNI: '.$this->dni.'<br>'; 
                 }
             }
 
@@ -88,13 +88,15 @@
                 }
 
                 public function MostrarTodasLasNotas(){
+                    echo "<br>Notas: ";
                     for ($i=0; $i<count($this->nota); $i++)
-                        echo $this->nota[$i]."||";
+                        echo $this->nota[$i]." || ";
+                    echo "<br>";
                     echo "<br>";
                 }
                 
                 public function Regularizar(){
-                    if ($this->condicion="Regular"){
+                    if ($this->condicion == "Regular"){
                         return true;
                     } else{
                         return false;
@@ -102,7 +104,7 @@
                 }
 
                 public function Promocionar(){
-                    if ($this->condicion="Promocion"){
+                    if ($this->condicion == "Promocion"){
                         return true;
                     } else{
                         return false;
@@ -122,6 +124,13 @@
                 public function MostrarCondicion(){
                     echo "<br> Condicion:".$this->condicion;
                 }
+
+                public function MostrarLegajo(){
+                    echo "<h3>LEGAJO</h3>";
+                    $this->alumno->MostrarPersona();
+                    echo "Condicion: ".$this->condicion;
+                    echo $this->MostrarTodasLasNotas();
+                }
             }
 
             //CLASE MATERIA
@@ -130,8 +139,6 @@
                 private $nombre;
                 private $profesor;
                 private $legajos=array();
-                private $Listaderugularizados=array();
-                private $ListadePromocionados=array();
                 
                 //METODOS
                 public function __construct($nombre, $profesor){
@@ -142,18 +149,90 @@
                 public function AgregarAlumnoALegajo($alumno){
                     $this->legajos[]=new Legajo($alumno);
                 }
-/*
+
                 public function RetornarListaRegularizados(){
-                    echo "<table border=1>";
-                    echo "<tr><td><h3>Lista de Alumnos Regulares</h3></td></tr>";
-                    for($i=0; $i<count($this->Listaderegularizados); $i++){
-                        echo "<tr><td>";
-                        echo $this->Listaderegularizados[$i]."<br>";
-                        echo "</td></tr>";
+                    $alumnosRegularizados = NULL;
+
+                    if(!empty($this->legajos)){ //Si el array es distinto de vacio
+                        for ($i=0; $i<(count($this->legajos)); $i++){
+                            $unLegajo = $this->legajos[$i];
+
+                            if($unLegajo->Regularizar()){
+                                $unAlumno = $unLegajo->GetAlumno();
+                                $nombre = $unAlumno->GetNombre();
+                                $dni = $unAlumno->GetDni();
+                                $alumnosRegularizados[]=new Alumno($nombre, $dni);
+                            }
+                        }
                     }
-                    echo "</table>";
+                    return $alumnosRegularizados;
                 }
-*/
+
+                public function mostrarVector($vec){
+                    for($i=0; $i<(count($vec)); $i++){
+                        $vec[$i]->mostrarPersona();
+                    }
+                }
+                
+                public function MostrarListaRegularizados(){
+                    $alumnosRegulares=array(); 
+                    $alumnosRegulares=$this->RetornarListaRegularizados();
+
+                    if(!empty($alumnosRegulares)){ //Si el array es distinto de vacio
+                        echo "<table border=1>";
+                        echo "<tr><td colspan='2'><h3>Alumnos Regularizados</h3></td></tr>";
+                        for($i=0; $i<count($alumnosRegulares); $i++){
+                            echo "<tr><td>";
+                            echo $alumnosRegulares[$i]->GetDni();
+                            echo "</td>";
+                            echo "<td>";
+                            echo $alumnosRegulares[$i]->GetNombre();
+                            echo "</td></tr>";
+                        }
+                        echo "</table>";
+                    }else{
+                        echo '<i>**No hay alumnos regularizados**</i><br><br>';
+                    }
+                }
+
+                public function RetornarListaPromocionados(){
+                    $alumnosPromocionados = NULL;
+                    if(!empty($this->legajos)){ //Si el array es distinto de vacio
+                        for ($i=0; $i<(count($this->legajos)); $i++){
+                            $unLegajo = $this->legajos[$i];
+
+                            if($unLegajo->Promocionar()){
+                                $unAlumno = $unLegajo->GetAlumno();
+                                $nombre = $unAlumno->GetNombre();
+                                $dni = $unAlumno->GetDni();
+                                $alumnosPromocionados[]=new Alumno($nombre, $dni); 
+                            }
+                        }
+                    }
+                    return $alumnosPromocionados;
+                }
+
+                public function MostrarListaPromocionados(){
+                    $alumnosPromocionados=array(); 
+                    $alumnosPromocionados=$this->RetornarListaPromocionados(); 
+
+                    if(!empty($alumnosPromocionados)){ //Si el array es distinto de vacio
+                        echo "<table border=1>";
+                        echo "<tr><td colspan='2'><h3>Alumnos Promocionados</h3></td></tr>";
+                        for($i=0; $i<count($alumnosPromocionados); $i++){
+                            echo "<tr><td>";
+                            echo $alumnosPromocionados[$i]->GetDni();
+                            echo "</td>";
+                            echo "<td>";
+                            echo $alumnosPromocionados[$i]->GetNombre();
+                            echo "</td></tr>";
+                        }
+                        echo "</table>";
+                    }else{
+                        echo '<i>**No hay alumnos promocionados**</i><br><br>';
+                    }
+                }
+
                 public function RetornarListaAlumnosInscriptos(){
                     $alumnosInscriptos = NULL;
                     if(!empty($this->legajos)){ //Si el array es distinto de vacio
@@ -166,12 +245,6 @@
                         }
                     }
                     return $alumnosInscriptos;
-                }
-
-                public function mostrarVector($vec){
-                    for($i=0; $i<(count($vec)); $i++){
-                        $vec[$i]->mostrarPersona();
-                    }
                 }
 
                 public function MostrarListaAlumnosInscriptos(){
@@ -204,7 +277,7 @@
                         $suma=$suma+$alumnosInscriptos[$i]->GetNota();
                     }
                     $promedio=$suma/count($alumnosInscriptos);
-                    echo "El promedio de $this->nombre en la materia $this->nombre es: $promedio <br>";
+                    echo 'El promedio de '.$this->nombre.' en la materia'.$this->nombre.' es: '.$promedio.'<br>';
                 }
 
                 public function TomarExamen($alumno){
@@ -216,28 +289,21 @@
                     
                     if($posicion != -1){
                         $nota=rand(1,10);
-                        echo "<br>".$alumno->GetNombre()." se saco ".$nota." en el examen.<br>";
-
+                        echo $alumno->GetNombre()." saco un ".$nota.' en el examen de '. $this->nombre.'<br>';
                         //Cargamos la nota en el registro de notas del alumno
-                        $this->legajo[$posicion]->CargarNota($nota);
+                        $this->legajos[$posicion]->CargarNota($nota);
+                        $this->legajos[$posicion]->MostrarLegajo();
 
                     }else{
                         echo '<br>El alumno con el dni '.$alumno->GetDni().' no se encuentra inscripto en '.$this->nombre;
                     }
 
                 }
-/*
-                if($nota >= 4 && $nota <= 6){
-                    $Listaderugularizados=new Alumno($alumno->GetNombre(), $alumno->GetDni());
-                }else if($nota > 6){
-                    $ListadePromocionados=new Alumno($alumno->GetNombre(), $alumno->GetDni());
-                }
-*/
+
                 //METODOS EXTRAS
                 public function busquedaAlumno($alumnosInscriptos, $dniBus){
                     $pos = 0;
                     while(($pos < count($alumnosInscriptos)) && !($alumnosInscriptos[$pos]->iguales($dniBus))){  //True si dni esta en el array
-                        echo $alumnosInscriptos[$pos]->getDni();
                         $pos++;
                     }
                     if($pos < count($alumnosInscriptos)){
@@ -258,30 +324,13 @@
                     echo $this->profesor->MostrarPersona();
                     $this->MostrarListaAlumnosInscriptos();
                 }
-/*
-                public function RetornarListadePromocionados(){
-                    echo "<table border=1>";
-                    echo "<tr><td><h3>Lista de Alumnos Promocionados</h3></td></tr>";
-                    for($i=0;$i<count($this->ListadePromocionados);$i++){
-                        echo "<tr><td>";
-                        echo $this->ListadePromocionados[$i]."<br>";
-                        echo "</td></tr>";
-                    }
-                    echo "</table>";
+
+                public function MostrarMateriaCondicionFinal(){
+                    $this->MostrarListaRegularizados();
+                    echo '<br>';
+                    $this->MostrarListaPromocionados();
                 }
 
-                public function Listaderegularizados(){
-                    if ($this->condicion=="Regular"){
-                        $this->Listaderegularizados[]=$this->nombre;
-                    }
-                }
-
-                public function ListadePromocionados(){
-                    if ($this->condicion=="Promocion"){
-                        $this->ListadePromocionados[]=$this->nombre;
-                    }
-                }
-*/
             }
 
             //CLASE PRINCIPAL
@@ -332,20 +381,25 @@
             $materia4->AgregarAlumnoALegajo($alumno2);
             $materia4->AgregarAlumnoALegajo($alumno3);
 
-            echo "<h3>PLANILLA DE MATERIAS</h3>";
+            echo "<hr><h3>PLANILLA DE MATERIAS</h3>";
 
             $materia1->MostrarMateriaPlanilla();
             $materia2->MostrarMateriaPlanilla();
             $materia3->MostrarMateriaPlanilla();
             $materia4->MostrarMateriaPlanilla();
 
-            echo '<h2>Examenes</h2>';
+            echo '<hr><h2>EXAMENES</h2>';
 
             //BASE DE DATOS: TOMAR EXAMEN
             $materia4->TomarExamen($alumno1);
- /*           $materia4->TomarExamen($alumno2);
-            $materia4->TomarExamen($alumno3);
-*/
+            $materia4->TomarExamen($alumno1);
+            $materia4->TomarExamen($alumno2);
+
+            echo '<hr><h2>CONDICION FINAL</h2>';
+
+            //BASE DE DATOS: CONDICION FINAL
+            $materia4->MostrarMateriaCondicionFinal();
+
         ?>
     </body>
 </html>
