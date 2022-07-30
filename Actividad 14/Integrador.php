@@ -74,8 +74,13 @@
                     return $this->alumno;
                 }
 
+                public function getNota(){
+                    return end($this->nota);
+                } 
+
                 public function CargarNota($nota){
                     $this->nota[]=$nota;
+                    $this->ActualizaCondicion();
                 }
 
                 public function MostrarNota(){ //Muestra la ultima nota cargada
@@ -89,14 +94,22 @@
                 }
                 
                 public function Regularizar(){
-                    if (end($this->nota)>=4){
-                        $this->condicion="Regular";
+                    if ($this->condicion="Regular"){
+                        return true;
                     } else{
-                        $this->condicion="Libre";
+                        return false;
                     }
                 }
 
                 public function Promocionar(){
+                    if ($this->condicion="Promocion"){
+                        return true;
+                    } else{
+                        return false;
+                    }
+                }
+
+                public function ActualizaCondicion(){
                     if (end($this->nota)<4){
                         $this->condicion="Libre";
                     } else if (end($this->nota)<7){
@@ -180,29 +193,46 @@
                         echo '<i>**No hay alumnos inscriptos**</i><br><br>';
                     }
                 }
-/*
+
                 public function CalcularPromedio() {
+                    $alumnosInscriptos=array(); 
+                    $alumnosInscriptos=$this->RetornarListaAlumnosInscriptos();
+
                     $suma=0;
-                    for($i=0;$i<count($this->nota);$i++)
-                    {
-                        $suma=$suma+$this->nota[$i];
+
+                    for($i=0; $i<count($alumnosInscriptos); $i++){
+                        $suma=$suma+$alumnosInscriptos[$i]->GetNota();
                     }
-                    $promedio=$suma/count($this->nota);
-                    echo "El promedio de $this->nombre en la materia $this->nombremateria es: $promedio <br>";
+                    $promedio=$suma/count($alumnosInscriptos);
+                    echo "El promedio de $this->nombre en la materia $this->nombre es: $promedio <br>";
                 }
-*/
+
                 public function TomarExamen($alumno){
                     $alumnosInscriptos=array(); 
-                    $alumnosInscriptos=$this->RetornarListaAlumnosInscriptos(); 
-                    if($this->busquedaAlumno($alumnosInscriptos, $alumno->GetDni())){
-                        $this->nota[]=rand(1,10);
-                        echo "<br>".$alumno->GetNombre()." se saco ".end($this->nota)." en el examen.<br>";
+                    $alumnosInscriptos=$this->RetornarListaAlumnosInscriptos();
+                   
+                    //Buscamos si el alumno que quiere rendir esta inscripto a la materia
+                    $posicion=$this->busquedaAlumno($alumnosInscriptos, $alumno->GetDni());
+                    
+                    if($posicion != -1){
+                        $nota=rand(1,10);
+                        echo "<br>".$alumno->GetNombre()." se saco ".$nota." en el examen.<br>";
+
+                        //Cargamos la nota en el registro de notas del alumno
+                        $this->legajo[$posicion]->CargarNota($nota);
+
                     }else{
                         echo '<br>El alumno con el dni '.$alumno->GetDni().' no se encuentra inscripto en '.$this->nombre;
                     }
 
                 }
-
+/*
+                if($nota >= 4 && $nota <= 6){
+                    $Listaderugularizados=new Alumno($alumno->GetNombre(), $alumno->GetDni());
+                }else if($nota > 6){
+                    $ListadePromocionados=new Alumno($alumno->GetNombre(), $alumno->GetDni());
+                }
+*/
                 //METODOS EXTRAS
                 public function busquedaAlumno($alumnosInscriptos, $dniBus){
                     $pos = 0;
@@ -211,10 +241,10 @@
                         $pos++;
                     }
                     if($pos < count($alumnosInscriptos)){
-                        return true;
+                        return $pos; //Si esta
                     }
                     else{
-                        return false;
+                        return -1; //No esta
                     }
                 }
 
