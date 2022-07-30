@@ -74,6 +74,10 @@
                     return $this->alumno;
                 }
 
+                public function GetCondicion(){
+                    return $this->condicion;
+                }
+
                 public function getNota(){
                     return end($this->nota);
                 } 
@@ -88,11 +92,8 @@
                 }
 
                 public function MostrarTodasLasNotas(){
-                    echo "<br>Notas: ";
                     for ($i=0; $i<count($this->nota); $i++)
                         echo $this->nota[$i]." || ";
-                    echo "<br>";
-                    echo "<br>";
                 }
                 
                 public function Regularizar(){
@@ -125,12 +126,37 @@
                     echo "<br> Condicion:".$this->condicion;
                 }
 
-                public function MostrarLegajo(){
+                public function MostrarLegajoSimple(){
                     echo "<h3>LEGAJO</h3>";
                     $this->alumno->MostrarPersona();
                     echo "Condicion: ".$this->condicion;
                     echo $this->MostrarTodasLasNotas();
                 }
+
+                public function MostrarLegajo(){              
+                    echo "<br><table border=1>";
+
+                    echo "<tr><td colspan='4'><h3>Legajo</h3></td></tr>";
+                    
+                    echo "<tr><td>";
+                    echo $this->alumno->GetDni();
+                    echo "</td>";
+                    
+                    echo "<td>";
+                    echo $this->alumno->GetNombre();
+                    echo "</td>";
+
+                    echo "<td>";
+                    echo $this->MostrarTodasLasNotas();
+                    echo "</td>";
+
+                    echo "<td>";
+                    echo $this->GetCondicion();
+                    echo "</td></tr>";
+
+                    echo "</table><br>";
+                }
+
             }
 
             //CLASE MATERIA
@@ -295,7 +321,7 @@
                         $this->legajos[$posicion]->MostrarLegajo();
 
                     }else{
-                        echo '<br>El alumno con el dni '.$alumno->GetDni().' no se encuentra inscripto en '.$this->nombre;
+                        echo 'El alumno con dni '.$alumno->GetDni().' no se encuentra inscripto en '.$this->nombre;
                     }
 
                 }
@@ -394,6 +420,8 @@
             $materia4->TomarExamen($alumno1);
             $materia4->TomarExamen($alumno1);
             $materia4->TomarExamen($alumno2);
+            $materia4->TomarExamen($alumno3);
+            $materia4->TomarExamen($alumno4);
 
             echo '<hr><h2>CONDICION FINAL</h2>';
 
