@@ -6,7 +6,7 @@
     <body>
         <?php
 
-            //CLASE PERSONA
+            //----------------CLASE PERSONA----------------------------
             class Persona {
                 //ATRIBUTOS 
                 protected $nombre;
@@ -47,17 +47,17 @@
                 }
             }
 
-            //CLASE PROFESOR
+            //-------------------CLASE PROFESOR-------------------
             class Profesor extends Persona{
 
             }
 
-            //CLASE ALUMNO
+            //---------------------CLASE ALUMNO------------------
             class Alumno extends Persona{
 
             }
 
-            //CLASE LEGAJO
+            //---------------------CLASE LEGAJO------------------
             class Legajo extends Alumno{
                 //ATRIBUTOS
                 private $alumno;
@@ -159,7 +159,7 @@
 
             }
 
-            //CLASE MATERIA
+            //-----------------------CLASE MATERIA----------------------
             class Materia{
                 //ATRIBUTOS
                 private $nombre;
@@ -359,7 +359,9 @@
 
             }
 
-            //CLASE PRINCIPAL
+
+            //---------------------CLASE PRINCIPAL-----------------------
+
 
             //PROFESORES
             $profesor1=new Profesor('Lorena Santos',21000111);
@@ -401,32 +403,33 @@
             $materia2->MostrarMateria();
             $materia3->MostrarMateria();
             $materia4->MostrarMateria();
-
+  
             //BASE DE DATOS: Inscribir alumnos
             $materia4->AgregarAlumnoALegajo($alumno1);
             $materia4->AgregarAlumnoALegajo($alumno2);
             $materia4->AgregarAlumnoALegajo($alumno3);
 
-            echo "<hr><h3>PLANILLA DE MATERIAS</h3>";
+            echo "<hr><h3>PLANILLAS DE MATERIAS</h3>";
 
             $materia1->MostrarMateriaPlanilla();
             $materia2->MostrarMateriaPlanilla();
             $materia3->MostrarMateriaPlanilla();
             $materia4->MostrarMateriaPlanilla();
 
+
+            //EXAMENES
             echo '<hr><h2>EXAMENES</h2>';
 
-            //BASE DE DATOS: TOMAR EXAMEN
+            //TOMAR EXAMEN
             $materia4->TomarExamen($alumno1);
             $materia4->TomarExamen($alumno1);
             $materia4->TomarExamen($alumno2);
-            $materia4->TomarExamen($alumno3);
-            $materia4->TomarExamen($alumno4);
 
+            //CONDICION FINAL
             echo '<hr><h2>CONDICION FINAL</h2>';
-
-            //BASE DE DATOS: CONDICION FINAL
+            
             $materia4->MostrarMateriaCondicionFinal();
+            //$materia4->MostrarListaRegularizados();
 
         ?>
     </body>
