@@ -34,6 +34,14 @@
                     $this->dni = $dni;
                 }
 
+                public function iguales($dni){
+                    if($this->dni == $dni){
+                        return true;
+                    }else{
+                        return false;
+                    }
+                }
+
                 public function MostrarPersona (){
                     echo $this->nombre.'- DNI: '.$this->dni.'<br>'; 
                 }
@@ -182,25 +190,25 @@
                     $promedio=$suma/count($this->nota);
                     echo "El promedio de $this->nombre en la materia $this->nombremateria es: $promedio <br>";
                 }
-
+*/
                 public function TomarExamen($alumno){
-                    echo 'llego';
-                    $alumnosInscriptos = retornarListaAlumnosInscriptos();
-                    echo 'llego';
-                    if(busquedaAlumno($alumnosInscriptos, $alumno->GetDni)){
+                    $alumnosInscriptos=array(); 
+                    $alumnosInscriptos=$this->RetornarListaAlumnosInscriptos(); 
+                    if($this->busquedaAlumno($alumnosInscriptos, $alumno->GetDni())){
                         $this->nota[]=rand(1,10);
                         echo "<br>".$alumno->GetNombre()." se saco ".end($this->nota)." en el examen.<br>";
                     }else{
-                        echo 'El alumno con el dni '.$alumno->GetDni().' no se encuentra inscripto en '.$this->nombre;
+                        echo '<br>El alumno con el dni '.$alumno->GetDni().' no se encuentra inscripto en '.$this->nombre;
                     }
 
                 }
 
                 //METODOS EXTRAS
-                public function busquedaAlumno($alumnosInscriptos, $dni){
+                public function busquedaAlumno($alumnosInscriptos, $dniBus){
                     $pos = 0;
-                    while($pos < count($alumnosInscriptos) && $alumnosInscriptos[$pos]->GetDni() != $dni){  //True si dni esta en el array
-                        return true;
+                    while(($pos < count($alumnosInscriptos)) && !($alumnosInscriptos[$pos]->iguales($dniBus))){  //True si dni esta en el array
+                        echo $alumnosInscriptos[$pos]->getDni();
+                        $pos++;
                     }
                     if($pos < count($alumnosInscriptos)){
                         return true;
@@ -209,7 +217,7 @@
                         return false;
                     }
                 }
-*/
+
                 public function MostrarMateria(){
                     echo '<b>'.$this->nombre.'</b><br>';
                     echo $this->profesor->MostrarPersona().'<br>';   
@@ -249,9 +257,9 @@
             //CLASE PRINCIPAL
 
             //PROFESORES
-            $profesor1=new Profesor("Lorena Santos","21000111");
-            $profesor2=new Profesor("Noelia Sanchez","22000111");
-            $profesor3=new Profesor("Juan Flores","23000111");
+            $profesor1=new Profesor('Lorena Santos',21000111);
+            $profesor2=new Profesor('Noelia Sanchez',22000111);
+            $profesor3=new Profesor('Juan Flores',23000111);
 
             echo "<h3>PROFESORES</h3>";
 
@@ -261,11 +269,11 @@
     
 
             //ALUMNOS
-            $alumno1=new Alumno("Juan Perez","41000111");
-            $alumno2=new Alumno("Juan Luna","42000111");
-            $alumno3=new Alumno("Juan Lopez","43000111");
-            $alumno4=new Alumno("Juan Leon","44000111");
-            $alumno5=new Alumno("Juan Paz","45000111");
+            $alumno1=new Alumno('Juan Perez',41000111);
+            $alumno2=new Alumno('Juan Luna',42000111);
+            $alumno3=new Alumno('Juan Lopez',43000111);
+            $alumno4=new Alumno('Juan Leon',44000111);
+            $alumno5=new Alumno('Juan Paz',45000111);
 
             echo "<h3>ALUMNOS</h3>";
 
@@ -277,10 +285,10 @@
 
 
             //MATERIAS
-            $materia1=new Materia("Arquitectura de la Computadora", $profesor1);
-            $materia2=new Materia("Sistemas Operativos", $profesor1);
-            $materia3=new Materia("Ingles Tecnico I", $profesor2);
-            $materia4=new Materia("Base de Datos", $profesor3);
+            $materia1=new Materia('Arquitectura de la Computadora', $profesor1);
+            $materia2=new Materia('Sistemas Operativos', $profesor1);
+            $materia3=new Materia('Ingles Tecnico I', $profesor2);
+            $materia4=new Materia('Base de Datos', $profesor3);
 
             echo "<h3>MATERIAS</h3>";
 
@@ -297,15 +305,15 @@
             echo "<h3>PLANILLA DE MATERIAS</h3>";
 
             $materia1->MostrarMateriaPlanilla();
-          $materia2->MostrarMateriaPlanilla();
+            $materia2->MostrarMateriaPlanilla();
             $materia3->MostrarMateriaPlanilla();
             $materia4->MostrarMateriaPlanilla();
-/*
+
             echo '<h2>Examenes</h2>';
 
             //BASE DE DATOS: TOMAR EXAMEN
             $materia4->TomarExamen($alumno1);
-            $materia4->TomarExamen($alumno2);
+ /*           $materia4->TomarExamen($alumno2);
             $materia4->TomarExamen($alumno3);
 */
         ?>
